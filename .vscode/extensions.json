@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "golang.Go",
+    "Vue.volar",
+    "42Crunch.vscode-openapi",
+    "hediet.vscode-drawio",
+    "bierner.markdown-mermaid",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "hverlin.mise-vscode"
+  ]
+}

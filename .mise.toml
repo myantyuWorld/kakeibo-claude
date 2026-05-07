@@ -1,0 +1,40 @@
+[settings]
+experimental = true
+
+[tools]
+node = '25.9.0'
+pnpm = '10.33.0'
+go = '1.26.2'
+"go:github.com/air-verse/air" = '1.64.5'
+golangci-lint = '2.11.4'
+lefthook = '2.1.6'
+gitleaks = '8.30.1'
+
+[tasks.setup]
+description = "Create .env from .env.example"
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ ! -f backend/.env ]; then
+  cp backend/.env.example backend/.env
+  echo "backend/.env created from backend/.env.example"
+else
+  echo "backend/.env already exists, skipping"
+fi
+
+if [ ! -f frontend/.env ]; then
+  cp frontend/.env.example frontend/.env
+  echo "frontend/.env created from frontend/.env.example"
+else
+  echo "frontend/.env already exists, skipping"
+fi
+"""
+
+[tasks.up]
+description = "Start containers"
+run = "docker compose --env-file backend/.env up -d"
+
+[tasks.down]
+description = "Stop containers"
+run = "docker compose --env-file backend/.env down"

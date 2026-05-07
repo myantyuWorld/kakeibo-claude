@@ -1,0 +1,69 @@
+version: "2"
+
+linters:
+  default: standard
+  enable:
+    - bodyclose
+    - copyloopvar
+    - dupl
+    - errname
+    - errorlint
+    - funlen
+    - goconst
+    - gosec
+    - gocritic
+    - lll
+    - misspell
+    - nilerr
+    - nilnil
+    - noctx
+    - nolintlint
+    - perfsprint
+    - prealloc
+    - predeclared
+    - reassign
+    - revive
+    - testifylint
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - whitespace
+
+  settings:
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+
+    revive:
+      rules:
+        - name: unexported-return
+          disabled: true
+
+    funlen:
+      lines: 100
+      statements: 60
+
+    goconst:
+      min-len: 3
+      min-occurrences: 3
+
+    lll:
+      line-length: 140
+
+    misspell:
+      locale: US
+
+
+  exclusions:
+    generated: lax
+    presets:
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: _test\.go
+        linters:
+          - dupl
+          - funlen
+          - goconst

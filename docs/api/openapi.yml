@@ -1,0 +1,23 @@
+openapi: 3.0.3
+info:
+  title: Go Claude API
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+
+tags:
+  - name: Auth
+    description: 認証
+
+paths:
+  /auth/me:
+    $ref: './paths/auth.yml#/~1auth~1me'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

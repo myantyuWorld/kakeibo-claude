@@ -1,0 +1,34 @@
+[env]
+_.file = ".env"
+
+[tasks.dev]
+description = "Start Vite dev server"
+run = "pnpm run dev"
+
+[tasks.build]
+description = "Production build"
+run = "pnpm run build"
+
+[tasks.lint]
+description = "Run ESLint"
+run = "pnpm run lint"
+
+[tasks.format]
+description = "Run Prettier"
+run = "pnpm run format"
+
+[tasks.test]
+description = "Run Vitest in watch mode"
+run = "pnpm run test"
+
+[tasks.test-run]
+description = "Run Vitest once"
+run = "pnpm run test:run"
+
+[tasks.generate-api]
+description = "Generate API types from OpenAPI spec"
+run = "pnpm run generate:api"
+
+[tasks.storybook]
+description = "Start Storybook dev server"
+run = "pnpm run storybook"

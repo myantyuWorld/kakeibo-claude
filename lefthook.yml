@@ -1,0 +1,36 @@
+min_version: "1.11.0"
+
+pre-commit:
+  parallel: true
+  commands:
+    gitleaks:
+      run: gitleaks protect --staged --redact
+
+    backend-lint:
+      root: "backend/"
+      glob: "*.go"
+      run: mise run lint
+
+    frontend-lint:
+      root: "frontend/"
+      glob: "*.{ts,tsx,vue}"
+      run: mise run lint
+
+    frontend-format:
+      root: "frontend/"
+      glob: "*.{ts,tsx,vue,json,yml,yaml,css}"
+      run: mise run format
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    backend-test:
+      root: "backend/"
+      glob: "*.go"
+      run: mise run test-all
+
+    frontend-test:
+      root: "frontend/"
+      glob: "*.{ts,tsx,vue}"
+      run: mise run test-run

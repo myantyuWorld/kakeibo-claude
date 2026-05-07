@@ -1,0 +1,60 @@
+responses:
+  InvalidError:
+    description: Bad Request
+    content:
+      application/json:
+        schema:
+          $ref: '#/schemas/ErrorResponse'
+        example:
+          code: "invalid"
+          message: "入力内容に誤りがあります"
+  UnauthorizedError:
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          $ref: '#/schemas/ErrorResponse'
+        example:
+          code: "unauthorized"
+          message: "認証が必要です"
+  ForbiddenError:
+    description: Forbidden
+    content:
+      application/json:
+        schema:
+          $ref: '#/schemas/ErrorResponse'
+        example:
+          code: "forbidden"
+          message: "アクセス権限がありません"
+  NotFoundError:
+    description: Not Found
+    content:
+      application/json:
+        schema:
+          $ref: '#/schemas/ErrorResponse'
+        example:
+          code: "not_found"
+          message: "リソースが見つかりません"
+  InternalServerError:
+    description: Internal Server Error
+    content:
+      application/json:
+        schema:
+          $ref: '#/schemas/ErrorResponse'
+        example:
+          code: "internal_server_error"
+          message: "予期しないエラーが発生しました"
+
+schemas:
+  ErrorResponse:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: string
+        description: "エラーコード"
+      message:
+        type: string
+        description: "エラーメッセージ"

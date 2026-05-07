@@ -1,0 +1,53 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$CLAUDE_TOOL_INPUT\" | grep -q '\\-\\-no-verify' && echo 'BLOCK: --no-verify は使用禁止です' && exit 1 || exit 0"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$CLAUDE_TOOL_INPUT\" | grep -q '.golangci.yml' && echo 'BLOCK: .golangci.yml の変更は禁止です' && exit 1 || exit 0"
+          },
+          {
+            "type": "command",
+            "command": "echo \"$CLAUDE_TOOL_INPUT\" | grep -q 'eslint.config.ts' && echo 'BLOCK: eslint.config.ts の変更は禁止です' && exit 1 || exit 0"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$CLAUDE_TOOL_INPUT\" | grep -q '\\.go\"' && gofmt -w $(echo \"$CLAUDE_TOOL_INPUT\" | grep -o '\"[^\"]*\\.go\"' | tr -d '\"') || exit 0"
+          },
+          {
+            "type": "command",
+            "command": "FILE=$(echo \"$CLAUDE_TOOL_INPUT\" | grep -o '\"[^\"]*\\(\\.vue\\|\\.ts\\)\"' | head -1 | tr -d '\"'); [ -n \"$FILE\" ] && cd frontend && mise run lint -- --fix \"../$FILE\" 2>/dev/null; exit 0"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd backend && mise run lint && mise run test && cd ../frontend && mise run lint && mise run test-run"
+          }
+        ]
+      }
+    ]
+  }
+}

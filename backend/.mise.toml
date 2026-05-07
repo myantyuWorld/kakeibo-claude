@@ -1,0 +1,22 @@
+[env]
+_.file = ".env"
+
+[tasks.dev]
+description = "Start dev server with Air (hot reload)"
+run = "air"
+
+[tasks.lint]
+description = "Run golangci-lint"
+run = "golangci-lint run ./..."
+
+[tasks.test]
+description = "Run unit tests"
+run = "go test ./internal/..."
+
+[tasks.test-integration]
+description = "Run integration tests"
+run = "go test ./tests/..."
+
+[tasks.test-all]
+description = "Run all tests"
+run = "go test ./..."
