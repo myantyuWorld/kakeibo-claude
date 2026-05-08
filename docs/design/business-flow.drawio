@@ -1,0 +1,203 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram name="BusinessFlow" id="kakeibo-bizflow">
+    <mxGraphModel adaptiveColors="auto" dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="1500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="業務フロー図（家計簿アプリ - 主要業務）" style="text;html=1;align=left;verticalAlign=middle;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="15" width="600" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend" value="【凡例】　● 開始/終了　／　□ 青=管理者　緑=メンバー　黄=システム　／　点線=自動処理（バッチ）・LINE 経由連携" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#999999;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle" vertex="1" parent="1">
+          <mxGeometry x="40" y="50" width="900" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Swimlanes -->
+        <mxCell id="lane_admin" value="管理者" style="swimlane;horizontal=1;startSize=30;fillColor=#F5F5F5;swimlaneFillColor=#FFFFFF;fontStyle=1;fontSize=14;strokeColor=#666666" vertex="1" parent="1">
+          <mxGeometry x="40" y="85" width="300" height="1240" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_member" value="メンバー" style="swimlane;horizontal=1;startSize=30;fillColor=#F5F5F5;swimlaneFillColor=#FFFFFF;fontStyle=1;fontSize=14;strokeColor=#666666" vertex="1" parent="1">
+          <mxGeometry x="340" y="85" width="300" height="1240" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_system" value="システム" style="swimlane;horizontal=1;startSize=30;fillColor=#F5F5F5;swimlaneFillColor=#FFFFFF;fontStyle=1;fontSize=14;strokeColor=#666666" vertex="1" parent="1">
+          <mxGeometry x="640" y="85" width="300" height="1240" as="geometry" />
+        </mxCell>
+
+        <!-- ===== 管理者レーン ===== -->
+        <mxCell id="start" value="開始" style="ellipse;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=12;fontStyle=1" vertex="1" parent="lane_admin">
+          <mxGeometry x="110" y="55" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="A1" value="LINE ログイン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12" vertex="1" parent="lane_admin">
+          <mxGeometry x="50" y="115" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="A2" value="プロフィール登録&#10;（ニックネーム／サムネ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12" vertex="1" parent="lane_admin">
+          <mxGeometry x="50" y="195" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="A3" value="家計簿を作成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12" vertex="1" parent="lane_admin">
+          <mxGeometry x="50" y="275" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="A4" value="カテゴリ編集／月次予算設定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12" vertex="1" parent="lane_admin">
+          <mxGeometry x="50" y="355" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="A5" value="招待 URL 発行・送信&#10;（LINE で共有）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12" vertex="1" parent="lane_admin">
+          <mxGeometry x="50" y="435" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="A6" value="家計簿削除（任意）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12" vertex="1" parent="lane_admin">
+          <mxGeometry x="50" y="1140" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="end" value="終了" style="ellipse;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=12;fontStyle=1" vertex="1" parent="lane_admin">
+          <mxGeometry x="110" y="1210" width="80" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ===== メンバーレーン ===== -->
+        <mxCell id="M1" value="招待 URL にアクセス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12" vertex="1" parent="lane_member">
+          <mxGeometry x="50" y="515" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M2" value="LINE ログイン・&#10;プロフィール登録" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12" vertex="1" parent="lane_member">
+          <mxGeometry x="50" y="595" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M3" value="家計簿に参加" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12" vertex="1" parent="lane_member">
+          <mxGeometry x="50" y="675" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M4" value="個人設定&#10;（カテゴリ表示・並び順・固定費）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12" vertex="1" parent="lane_member">
+          <mxGeometry x="50" y="755" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M5" value="収支登録&#10;（所有者選択／代理入力可）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12" vertex="1" parent="lane_member">
+          <mxGeometry x="50" y="835" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M6" value="チャット送受信" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12" vertex="1" parent="lane_member">
+          <mxGeometry x="50" y="915" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M7" value="月次収支確認・視覚化&#10;（推移／カテゴリ別／メンバー別）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12" vertex="1" parent="lane_member">
+          <mxGeometry x="50" y="995" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M8" value="アカウント退会（任意）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=12" vertex="1" parent="lane_member">
+          <mxGeometry x="50" y="1075" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ===== システムレーン ===== -->
+        <mxCell id="S1" value="LINE 認証" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12" vertex="1" parent="lane_system">
+          <mxGeometry x="50" y="115" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S2" value="デフォルトカテゴリ&#10;自動コピー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12" vertex="1" parent="lane_system">
+          <mxGeometry x="50" y="275" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S3" value="招待 URL 生成&#10;（24h／1 回限り）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12" vertex="1" parent="lane_system">
+          <mxGeometry x="50" y="435" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S4" value="LINE 認証 + URL 検証" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12" vertex="1" parent="lane_system">
+          <mxGeometry x="50" y="595" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S5" value="月初: 固定費明細を&#10;前月から自動コピー&#10;（月次バッチ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;dashed=1;fontSize=12" vertex="1" parent="lane_system">
+          <mxGeometry x="50" y="825" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="S6" value="LINE 公式アカウント&#10;Push 通知" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12" vertex="1" parent="lane_system">
+          <mxGeometry x="50" y="915" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S7" value="退会者データを家計簿に保持&#10;（所有者表示は『退会済みユーザー』）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11" vertex="1" parent="lane_system">
+          <mxGeometry x="50" y="1075" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S8" value="関連データ全削除&#10;（明細・カテゴリ・予算・チャット・招待）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11" vertex="1" parent="lane_system">
+          <mxGeometry x="50" y="1140" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ===== 管理者レーン内 縦フロー ===== -->
+        <mxCell id="e_start_a1" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="start" target="A1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a1_a2" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="A1" target="A2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a2_a3" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="A2" target="A3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a3_a4" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="A3" target="A4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a4_a5" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="A4" target="A5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a6_end" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="A6" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== メンバーレーン内 縦フロー ===== -->
+        <mxCell id="e_m1_m2" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="M1" target="M2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m2_m3" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="M2" target="M3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m3_m4" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="M3" target="M4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m4_m5" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="M4" target="M5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m5_m6" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="M5" target="M6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m6_m7" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="M6" target="M7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m7_m8" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0" edge="1" parent="1" source="M7" target="M8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== 日次運用ループ（収支登録 → 月次確認 → 収支登録） ===== -->
+        <mxCell id="e_m7_m5_loop" value="毎日の利用" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;strokeColor=#999999;fontSize=10" edge="1" parent="1" source="M7" target="M5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="370" y="1020" />
+              <mxPoint x="370" y="860" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===== クロスレーン（管理者 ↔ システム） ===== -->
+        <mxCell id="e_a1_s1" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0" edge="1" parent="1" source="A1" target="S1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a3_s2" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0" edge="1" parent="1" source="A3" target="S2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a5_s3" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0" edge="1" parent="1" source="A5" target="S3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== クロスレーン（管理者 → メンバー: 招待 URL を LINE で共有） ===== -->
+        <mxCell id="e_a5_m1" value="LINE で URL を送付" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;fontSize=10" edge="1" parent="1" source="A5" target="M1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== クロスレーン（メンバー ↔ システム） ===== -->
+        <mxCell id="e_m2_s4" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0" edge="1" parent="1" source="M2" target="S4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s5_m5" value="毎月 1 日 0:00 自動" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;dashed=1;fontSize=10" edge="1" parent="1" source="S5" target="M5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m6_s6" value="他メンバー宛に通知" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;fontSize=10" edge="1" parent="1" source="M6" target="S6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_m8_s7" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0" edge="1" parent="1" source="M8" target="S7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== クロスレーン（管理者 → システム: 家計簿削除） ===== -->
+        <mxCell id="e_a6_s8" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0" edge="1" parent="1" source="A6" target="S8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Notes ===== -->
+        <mxCell id="notes" value="【補足】&#10;・管理者本人もメンバーとして収支登録・チャット参加を行う（管理者は M1〜M4 を経ずに M5 以降のループに直接合流）&#10;・1 ユーザーは 1 家計簿のみに所属する。集計・予算判定・固定費コピーはすべて暦月（1 日〜末日）固定&#10;・代理入力: 収支明細の所有者は登録時に他メンバーへ変更可能。所属家計簿の明細は所有者を問わず閲覧・編集・削除可&#10;・退会者の収支明細は家計簿に残る（家計簿削除時にのみ全データ削除）&#10;・CSV インポート（過去データ移行）は M5 と同等の業務として M5 経路に含む（図中省略）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#999999;fontSize=11;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8" vertex="1" parent="1">
+          <mxGeometry x="40" y="1340" width="900" height="120" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
