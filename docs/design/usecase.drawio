@@ -35,6 +35,9 @@
         <mxCell id="pkg_chat" value="チャット" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=left;fontSize=13;fontStyle=1;fillColor=none;strokeColor=#666666;dashed=1;spacingLeft=8;" vertex="1" parent="1">
           <mxGeometry x="1240" y="680" width="480" height="300" as="geometry" />
         </mxCell>
+        <mxCell id="pkg_personal" value="個人設定・情報閲覧" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=left;fontSize=13;fontStyle=1;fillColor=none;strokeColor=#666666;dashed=1;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="260" y="895" width="460" height="170" as="geometry" />
+        </mxCell>
 
         <!-- Use cases -->
         <mxCell id="uc_login" value="LINEでログインする" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
@@ -78,8 +81,8 @@
         <mxCell id="uc_csv_import" value="CSVから収支明細を&#10;インポートする" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="820" y="780" width="240" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="uc_auto_copy" value="固定費を月初に&#10;自動コピーする" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;fontStyle=2;" vertex="1" parent="1">
-          <mxGeometry x="820" y="880" width="240" height="60" as="geometry" />
+        <mxCell id="uc_auto_copy" value="«scheduled»&#10;固定費を月初に&#10;自動コピーする" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="820" y="870" width="240" height="70" as="geometry" />
         </mxCell>
 
         <mxCell id="note_auto_copy" value="月初にシステムが&#10;自動実行" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
@@ -122,7 +125,7 @@
         <mxCell id="actor_line_login" value="LINE Login API" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;html=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
           <mxGeometry x="1810" y="200" width="40" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="actor_line_msg" value="LINE Messaging API" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;html=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+        <mxCell id="actor_line_msg" value="LINE Messaging API&#10;（公式アカウント経由）" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;html=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
           <mxGeometry x="1810" y="900" width="40" height="60" as="geometry" />
         </mxCell>
 
@@ -153,7 +156,7 @@
         <mxCell id="a_m_entry_manage" style="endArrow=none;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="actor_member" target="uc_entry_manage">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="a_m_csv" style="endArrow=none;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="actor_member" target="uc_csv_import">
+        <mxCell id="a_a_csv" style="endArrow=none;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="actor_admin" target="uc_csv_import">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="a_m_viz_monthly" style="endArrow=none;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="actor_member" target="uc_viz_monthly">
@@ -205,6 +208,72 @@
 
         <!-- Note attached to auto copy use case -->
         <mxCell id="note_link" style="endArrow=none;dashed=1;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="note_auto_copy" target="uc_auto_copy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Legend (color coding) -->
+        <mxCell id="note_legend" value="【凡例】&#10;● 青 = メンバー操作&#10;● 橙 = 管理者操作&#10;● 灰イタリック = システム自動&#10;● 赤 = 外部システム" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="90" width="240" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Note: 家計簿作成時に管理者ロール付与 -->
+        <mxCell id="note_house_role" value="家計簿を「作成」した時点で&#10;その操作者は管理者ロールを得る&#10;（編集・削除は管理者のみ）" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="575" y="495" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="note_house_role_link" style="endArrow=none;dashed=1;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="note_house_role" target="uc_house_manage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: 管理者退会時の運用ルール -->
+        <mxCell id="note_withdraw_admin" value="v1: 管理者は退会前に&#10;家計簿を削除する運用&#10;（システム制約なし）" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="575" y="325" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="note_withdraw_admin_link" style="endArrow=none;dashed=1;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="note_withdraw_admin" target="uc_withdraw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: 固定費フラグは個人レベル -->
+        <mxCell id="note_personal_fixed" value="固定費フラグは個人レベル：&#10;メンバーごとに自身が使う&#10;支出カテゴリを固定費に指定" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1085" y="260" width="123" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="note_personal_fixed_link" style="endArrow=none;dashed=1;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="note_personal_fixed" target="uc_personal_cat">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- New UCs added per Round-1/Round-2 QA results -->
+        <mxCell id="uc_member_list" value="家計簿情報・メンバーを&#10;確認する" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="320" y="925" width="240" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_notification" value="通知設定を管理する&#10;（Push 通知 ON/OFF）" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="320" y="995" width="240" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a_m_member_list" style="endArrow=none;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="actor_member" target="uc_member_list">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_m_notification" style="endArrow=none;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="actor_member" target="uc_notification">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Include relations -->
+        <mxCell id="inc_viz_budget" value="«include»&#10;（予算設定時のみ）" style="endArrow=open;endFill=0;html=1;dashed=1;edgeStyle=none;rounded=0;fontSize=10;fontStyle=2;" edge="1" parent="1" source="uc_viz_cumulative" target="uc_budget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc_chat_push" value="«include»&#10;（通知 ON の受信側のみ）" style="endArrow=open;endFill=0;html=1;dashed=1;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;rounded=0;fontSize=10;fontStyle=2;" edge="1" parent="1" source="uc_chat_msg" target="uc_chat_push">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Notes added per Round-2/Round-3 QA results -->
+        <mxCell id="note_invite_one" value="同時に有効な招待 URL は 1 本&#10;新規発行で既存を自動無効化&#10;既に家計簿所属者は参加不可" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="575" y="595" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="note_invite_one_link" style="endArrow=none;dashed=1;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="note_invite_one" target="uc_invite_issue">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="note_csv_rule" value="管理者のみ実行可&#10;重複検知あり&#10;（同日付・同カテゴリ・同額）" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="775" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="note_csv_rule_link" style="endArrow=none;dashed=1;html=1;edgeStyle=none;rounded=0;" edge="1" parent="1" source="note_csv_rule" target="uc_csv_import">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
