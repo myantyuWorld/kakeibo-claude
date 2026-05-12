@@ -17,15 +17,15 @@ description: 業務ルールのレビューとリファインメントを行う�
 
 ### 1. 対象ファイルの特定
 
-- 引数でドメイン名が指定された場合: `docs/design/{domain}/業務ルール.md` を読む
+- 引数でドメイン名が指定された場合: `docs/design/domains/{domain}/業務ルール.md` を読む
 - 指定がない場合: `docs/design/README.md` からドメイン一覧を確認し、AskUserQuestion で対象を選ばせる
 
 ### 2. 関連ドキュメントの読み込み
 
 対象ドメインの以下を読み込み、業務ルールとの整合性チェックに使う:
 
-- `docs/design/{domain}/ドメインモデル.md` - エンティティ・集約の構造
-- `docs/design/{domain}/index.md` - ユースケース・外部連携
+- `docs/design/domains/{domain}/ドメインモデル.md` - エンティティ・集約の構造
+- `docs/design/domains/{domain}/index.md` - ユースケース・外部連携
 - `docs/diagram/ドメインモデル図.drawio` - drawio の吹き出し（ルール/制約の元ネタ）
 - `docs/diagram/オブジェクト図.drawio` - 具体例（受入基準の元ネタ）
 

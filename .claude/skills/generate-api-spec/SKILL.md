@@ -27,9 +27,9 @@ description: 設計ドキュメントからAPI仕様書（OpenAPI YAML）を生�
 
 以下を読み込む:
 
-- `docs/design/{domain}/index.md` — ドメイン概要・ユースケース一覧
-- `docs/design/{domain}/ドメインモデル.md` — エンティティ・値オブジェクト構造
-- `docs/design/{domain}/業務ルール.md` — バリデーションルール・受入基準
+- `docs/design/domains/{domain}/index.md` — ドメイン概要・ユースケース一覧
+- `docs/design/domains/{domain}/ドメインモデル.md` — エンティティ・値オブジェクト構造
+- `docs/design/domains/{domain}/業務ルール.md` — バリデーションルール・受入基準
 - `.claude/rules/architecture.md` — ルーティング規約・エラーハンドリング
 
 ### 3. ユースケースの分類と生成方針
@@ -217,7 +217,7 @@ components:
 
 ### 7. index.md の更新
 
-生成完了後、`docs/design/{domain}/index.md` の関連ドキュメントに API 仕様書へのリンクを追加する。
+生成完了後、`docs/design/domains/{domain}/index.md` の関連ドキュメントに API 仕様書へのリンクを追加する。
 
 ```markdown
 ## 関連ドキュメント

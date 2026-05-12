@@ -25,8 +25,8 @@ argument-hint: "{ドメイン名}"
 
 以下を読み込む:
 
-- `docs/design/{domain}/ドメインモデル.md` — エンティティ・値オブジェクト・集約構造
-- `docs/design/{domain}/業務ルール.md` — バリデーション・ライフサイクル・文字数制約
+- `docs/design/domains/{domain}/ドメインモデル.md` — エンティティ・値オブジェクト・集約構造
+- `docs/design/domains/{domain}/業務ルール.md` — バリデーション・ライフサイクル・文字数制約
 - `.claude/rules/backend/database-design.md` — DDD→RDB マッピングルール・アンチパターンチェックリスト
 
 ### 2. DDD → RDB マッピング
@@ -186,16 +186,16 @@ Table order_items {
 
 ### 6. DBML ファイルの出力
 
-`docs/design/{domain}/er.dbml` に出力する。
+`docs/design/domains/{domain}/er.dbml` に出力する。
 
 ```bash
 # 出力先
-docs/design/{domain}/er.dbml
+docs/design/domains/{domain}/er.dbml
 ```
 
 ### 7. ドキュメントの更新
 
-`docs/design/{domain}/index.md` の関連ドキュメントに ER 図へのリンクを追加する。
+`docs/design/domains/{domain}/index.md` の関連ドキュメントに ER 図へのリンクを追加する。
 
 ```markdown
 ## 関連ドキュメント

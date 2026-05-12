@@ -7,8 +7,8 @@
 // 列挙（Enum）は varchar + note で表現する。
 //
 // 関連:
-//   - ドメインモデル詳細: docs/design/{domain}/ドメインモデル.md
-//   - 業務ルール詳細:     docs/design/{domain}/業務ルール.md
+//   - ドメインモデル詳細: docs/design/domains/{domain}/ドメインモデル.md
+//   - 業務ルール詳細:     docs/design/domains/{domain}/業務ルール.md
 //   - 集約間 ID 参照:     docs/design/集約俯瞰図.md
 //   - ユビキタス言語:     docs/design/対訳表.md
 //

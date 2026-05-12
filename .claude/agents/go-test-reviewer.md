@@ -17,7 +17,7 @@ model: sonnet
 
 ### CRITICAL -- 受入基準との対応
 
-- `docs/design/{ドメイン名}/業務ルール.md` の受入基準（Given/When/Then）がテストケースとして網羅されているか
+- `docs/design/domains/{ドメイン名}/業務ルール.md` の受入基準（Given/When/Then）がテストケースとして網羅されているか
 - 正常系・異常系の両方がカバーされているか
 - テストケース名が受入基準のシナリオ名と対応しているか
 
