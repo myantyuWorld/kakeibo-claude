@@ -1,0 +1,284 @@
+// ============================================================
+// 家計簿アプリ ER 図（DBML）
+//
+// 全 9 ドメイン・11 集約・11 テーブルを 1 ファイルに集約。
+// 各テーブルは「集約ルート = 1 テーブル」原則で対応する。
+// 値オブジェクト（1:1）は親テーブルにカラムとして埋め込み、
+// 列挙（Enum）は varchar + note で表現する。
+//
+// 関連:
+//   - ドメインモデル詳細: docs/design/{domain}/ドメインモデル.md
+//   - 業務ルール詳細:     docs/design/{domain}/業務ルール.md
+//   - 集約間 ID 参照:     docs/design/集約俯瞰図.md
+//   - ユビキタス言語:     docs/design/対訳表.md
+//
+// レンダリング:
+//   - dbdiagram.io でこのファイル全体を貼り付けると関係図が表示される
+// ============================================================
+
+
+// ============================================================
+// ユーザー (User) ドメイン
+// ============================================================
+
+Table users {
+  id uuid [pk]
+  line_user_id varchar [not null, note: 'LINE OIDC sub クレーム / 1〜64 文字 / API レスポンスに含めない']
+  nickname varchar [not null, default: '', note: '初回ログイン直後は空文字、登録後は 1〜30 文字']
+  thumbnail_url varchar [note: '任意、最大 500 文字、http(s):// 形式']
+  push_notification_enabled boolean [not null, default: true]
+  status varchar [not null, default: 'Active', note: 'Active / Withdrawn（UserStatus）']
+  withdrawn_at timestamptz [note: 'status=Withdrawn のとき NOT NULL']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    line_user_id [unique, name: 'idx_users_line_user_id_active', note: '部分一意 WHERE status = Active. 退会済みの LineUserID 再利用を許容']
+  }
+}
+
+
+// ============================================================
+// 家計簿 (Household) ドメイン
+// ============================================================
+
+Table households {
+  id uuid [pk]
+  name varchar [not null, note: 'HouseholdName / 1〜50 文字']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+
+// ============================================================
+// メンバーシップ (Membership) ドメイン
+//   - user_id 単独で一意（1 ユーザー 1 家計簿）
+//   - (household_id, role=Admin) は家計簿あたり 1 件まで
+//   - Role は作成後変更不可
+// ============================================================
+
+Table memberships {
+  id uuid [pk]
+  household_id uuid [not null, ref: > households.id, note: 'ON DELETE CASCADE']
+  user_id uuid [not null, unique, ref: > users.id, note: 'UserID 単独で一意（1 ユーザー 1 メンバーシップ）']
+  role varchar [not null, note: 'Admin / Member。作成後変更不可']
+  created_at timestamptz [not null, default: `now()`, note: '参加日時（JoinedAt と同義）']
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (household_id, role) [unique, name: 'idx_memberships_admin_uniq', note: '部分一意 WHERE role = Admin. 1 家計簿に管理者 1 人']
+  }
+}
+
+
+// ============================================================
+// 招待 (Invitation) ドメイン
+//   - token は全レコードで一意
+//   - 1 家計簿につき status=Pending は最大 1 件
+//   - status=Used のとき used_at と used_by_user_id は NOT NULL（業務ルール）
+//   - expires_at = created_at + 24 時間
+// ============================================================
+
+Table invitations {
+  id uuid [pk]
+  household_id uuid [not null, ref: > households.id, note: 'ON DELETE CASCADE']
+  issued_by_user_id uuid [not null, ref: > users.id, note: '発行者（管理者）']
+  used_by_user_id uuid [ref: > users.id, note: '使用者。status=Used のとき NOT NULL']
+  token varchar [not null, unique, note: '128 bit 以上の暗号論的乱数を base64url エンコード（22 文字以上）']
+  status varchar [not null, default: 'Pending', note: 'Pending / Used / Expired / Revoked']
+  expires_at timestamptz [not null, note: 'created_at + 24 時間 固定']
+  used_at timestamptz [note: 'status=Used のとき NOT NULL']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    household_id [unique, name: 'idx_invitations_pending_per_household', note: '部分一意 WHERE status = Pending. 同時に有効な招待は 1 本のみ']
+  }
+}
+
+
+// ============================================================
+// カテゴリ (Category) ドメイン
+//   - (household_id, kind, name) は一意
+//   - kind は作成後変更不可
+//   削除時の挙動:
+//     - Entry 参照あり → 業務ルールで削除拒否（アプリ層）
+//     - UserCategoryPreference / Budget → ON DELETE CASCADE
+// ============================================================
+
+Table categories {
+  id uuid [pk]
+  household_id uuid [not null, ref: > households.id, note: 'ON DELETE CASCADE']
+  kind varchar [not null, note: 'Income / Expense（CategoryKind）. 作成後変更不可']
+  name varchar [not null, note: 'CategoryName / 1〜30 文字']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (household_id, kind, name) [unique, name: 'idx_categories_unique_name', note: '同一家計簿・同一種別でカテゴリ名重複不可']
+  }
+}
+
+
+// ============================================================
+// 個人カテゴリ設定 (UserCategoryPreference) ドメイン
+//   - Lazy 作成: ユーザーが設定を変更したときに初めて INSERT
+//     レコード未存在時は IsVisible=true / DisplayOrder=作成順 /
+//     IsFixedCost=false のデフォルト値が適用される（アプリ層）
+//   - is_fixed_cost=true は Category.kind=Expense のときのみ許容（アプリ層）
+//   - is_fixed_cost と fixed_cost_activated_at は同期更新（true⇔NOT NULL）
+//   - display_order は同一ユーザー × 同一家計簿内で重複不可（household_id 非正規化を
+//     避けるためアプリ層で担保）
+// ============================================================
+
+Table user_category_preferences {
+  id uuid [pk]
+  user_id uuid [not null, ref: > users.id, note: 'ON DELETE CASCADE（将来の User 物理削除用）']
+  category_id uuid [not null, ref: > categories.id, note: 'ON DELETE CASCADE']
+  is_visible boolean [not null, default: true]
+  display_order integer [not null, default: 0, note: '0 以上の整数']
+  is_fixed_cost boolean [not null, default: false, note: 'Category.kind=Expense のときのみ true 可']
+  fixed_cost_activated_at timestamptz [note: 'is_fixed_cost=true のとき NOT NULL、false のとき NULL']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (user_id, category_id) [unique, name: 'idx_ucp_unique_user_category', note: '1 ユーザー × 1 カテゴリで設定は 1 件']
+  }
+}
+
+
+// ============================================================
+// 収支明細 (Entry) ドメイン
+//   - amount は 1〜9,999,999 円
+//   - memo は 0〜200 文字（任意）
+//   - owner_user_id は作成時点で対象家計簿の Active メンバー、作成後変更不可
+//   - created_by_user_id は操作者本人（同上）
+//   - category_id は entry の household_id と同じ家計簿のカテゴリ
+//   - entry_date は妥当な暦日（過去・未来とも許容）
+//   - Entry 自体は EntryKind を保持しない。Category.kind から導出
+// ============================================================
+
+Table entries {
+  id uuid [pk]
+  household_id uuid [not null, ref: > households.id, note: 'ON DELETE CASCADE']
+  owner_user_id uuid [not null, ref: > users.id, note: '所有者。作成後変更不可（代理入力時は created_by_user_id ≠ owner_user_id）']
+  created_by_user_id uuid [not null, ref: > users.id, note: '登録者（操作者本人）']
+  category_id uuid [not null, ref: > categories.id, note: '同一家計簿のカテゴリ。明細あり時のカテゴリ削除は業務ルールで拒否']
+  amount numeric [not null, note: '1〜9,999,999 円（JPY 整数）. NUMERIC で丸め誤差を避ける']
+  entry_date date [not null, note: '明細の発生日（暦日）']
+  memo varchar [note: '0〜200 文字（任意）']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (household_id, entry_date) [name: 'idx_entries_household_date', note: '月別・期間別集計用']
+    (household_id, category_id, entry_date) [name: 'idx_entries_household_category_date', note: 'カテゴリ別集計・カテゴリ削除時の存在チェック・CSV 重複検知']
+    (household_id, owner_user_id, category_id, entry_date) [name: 'idx_entries_fixed_cost_lookup', note: '固定費月初コピーの前月明細検索および冪等性チェック用']
+  }
+}
+
+
+// ============================================================
+// 予算 (Budget) ドメイン
+//   - amount は 1〜999,999,999 円
+//   - category は Category.kind=Expense のみ（アプリ層）
+//   - (household_id, category_id, year_month) は一意
+//   - year_month は月初日（1 日）の date として保持
+// ============================================================
+
+Table budgets {
+  id uuid [pk]
+  household_id uuid [not null, ref: > households.id, note: 'ON DELETE CASCADE']
+  category_id uuid [not null, ref: > categories.id, note: 'Category.kind=Expense のみ。ON DELETE CASCADE']
+  year_month date [not null, note: '対象月の月初日（YYYY-MM-01）を格納']
+  amount numeric [not null, note: '1〜999,999,999 円（JPY 整数）']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (household_id, category_id, year_month) [unique, name: 'idx_budgets_unique_per_month']
+  }
+}
+
+
+// ============================================================
+// チャット (ChatMessage) ドメイン
+//   - 3 集約: ChatMessage / ChatRead / OnlineStatus
+//   - chat_messages は v1 で編集・削除不可。updated_at を持たない
+//   - chat_reads は association table（複合 PK）。自動既読化で一括 INSERT
+//   - online_statuses は user_id を PK とし、認証付き全 API で last_seen_at を UPSERT
+//   - Household 削除 → chat_messages 全削除 → chat_reads（chat_message_id FK）連鎖
+// ============================================================
+
+Table chat_messages {
+  id uuid [pk]
+  household_id uuid [not null, ref: > households.id, note: 'ON DELETE CASCADE']
+  sender_user_id uuid [not null, ref: > users.id, note: '送信者']
+  body varchar [not null, note: 'MessageBody / 1〜500 文字（改行含む）']
+  created_at timestamptz [not null, default: `now()`, note: 'v1 では編集不可のため updated_at を持たない']
+
+  indexes {
+    (household_id, created_at) [name: 'idx_chat_messages_household_created', note: 'チャット履歴の時系列取得・ページング用']
+  }
+}
+
+Table chat_reads {
+  chat_message_id uuid [not null, ref: > chat_messages.id, note: 'ON DELETE CASCADE']
+  user_id uuid [not null, ref: > users.id, note: 'ON DELETE CASCADE（将来の User 物理削除用）']
+  read_at timestamptz [not null, default: `now()`, note: '自動既読化された時刻。再更新なし']
+
+  indexes {
+    (chat_message_id, user_id) [pk, note: '複合 PK。association table のため id 列なし']
+    (user_id, chat_message_id) [name: 'idx_chat_reads_by_user', note: 'ユーザーごとの既読一覧取得用']
+  }
+}
+
+Table online_statuses {
+  user_id uuid [pk, ref: > users.id, note: '1 ユーザー 1 行。ON DELETE CASCADE']
+  last_seen_at timestamptz [not null, default: `now()`, note: '認証付き全 API で UPSERT。online 判定: last_seen_at > now() - 5 分']
+}
+
+
+// ============================================================
+// テーブルグループ（ドメイン単位の視覚的グルーピング）
+// dbdiagram.io ではグループごとに色分けされ俯瞰しやすくなる
+// ============================================================
+
+TableGroup user_domain {
+  users
+}
+
+TableGroup household_domain {
+  households
+}
+
+TableGroup membership_domain {
+  memberships
+}
+
+TableGroup invitation_domain {
+  invitations
+}
+
+TableGroup category_domain {
+  categories
+}
+
+TableGroup user_category_preference_domain {
+  user_category_preferences
+}
+
+TableGroup entry_domain {
+  entries
+}
+
+TableGroup budget_domain {
+  budgets
+}
+
+TableGroup chat_message_domain {
+  chat_messages
+  chat_reads
+  online_statuses
+}
