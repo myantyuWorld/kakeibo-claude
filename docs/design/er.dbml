@@ -127,13 +127,15 @@ Table categories {
 //     IsFixedCost=false のデフォルト値が適用される（アプリ層）
 //   - is_fixed_cost=true は Category.kind=Expense のときのみ許容（アプリ層）
 //   - is_fixed_cost と fixed_cost_activated_at は同期更新（true⇔NOT NULL）
-//   - display_order は同一ユーザー × 同一家計簿内で重複不可（household_id 非正規化を
-//     避けるためアプリ層で担保）
+//   - display_order の重複は許容（DB 一意制約なし）。表示側で
+//     (display_order ASC, created_at ASC) によりタイブレーク
+//   - user_id への FK は RESTRICT（v1 では User 物理削除は提供しない）。
+//     家計簿削除時は categories → user_category_preferences の CASCADE で消える
 // ============================================================
 
 Table user_category_preferences {
   id uuid [pk]
-  user_id uuid [not null, ref: > users.id, note: 'ON DELETE CASCADE（将来の User 物理削除用）']
+  user_id uuid [not null, ref: > users.id, note: 'RESTRICT。v1 は User 物理削除なし']
   category_id uuid [not null, ref: > categories.id, note: 'ON DELETE CASCADE']
   is_visible boolean [not null, default: true]
   display_order integer [not null, default: 0, note: '0 以上の整数']
@@ -209,6 +211,8 @@ Table budgets {
 //   - chat_reads は association table（複合 PK）。自動既読化で一括 INSERT
 //   - online_statuses は user_id を PK とし、認証付き全 API で last_seen_at を UPSERT
 //   - Household 削除 → chat_messages 全削除 → chat_reads（chat_message_id FK）連鎖
+//   - User 参照 FK（chat_messages.sender_user_id / chat_reads.user_id /
+//     online_statuses.user_id）はすべて RESTRICT。v1 では User 物理削除を提供しない
 // ============================================================
 
 Table chat_messages {
@@ -225,7 +229,7 @@ Table chat_messages {
 
 Table chat_reads {
   chat_message_id uuid [not null, ref: > chat_messages.id, note: 'ON DELETE CASCADE']
-  user_id uuid [not null, ref: > users.id, note: 'ON DELETE CASCADE（将来の User 物理削除用）']
+  user_id uuid [not null, ref: > users.id, note: 'RESTRICT。v1 は User 物理削除なし']
   read_at timestamptz [not null, default: `now()`, note: '自動既読化された時刻。再更新なし']
 
   indexes {
@@ -235,7 +239,7 @@ Table chat_reads {
 }
 
 Table online_statuses {
-  user_id uuid [pk, ref: > users.id, note: '1 ユーザー 1 行。ON DELETE CASCADE']
+  user_id uuid [pk, ref: > users.id, note: '1 ユーザー 1 行。RESTRICT（v1 は User 物理削除なし）']
   last_seen_at timestamptz [not null, default: `now()`, note: '認証付き全 API で UPSERT。online 判定: last_seen_at > now() - 5 分']
 }
 
