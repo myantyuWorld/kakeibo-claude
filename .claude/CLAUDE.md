@@ -94,6 +94,52 @@
 
 `.claude/rules/common/git-workflow.md` を参照すること。
 
+## 開発ワークフロー（Loop Contract）
+
+このリポジトリで作業する時の "止め方と検証" の契約。反復の号令・過剰確認・憶測を減らすためのガードレール。**個人開発＝1人が最大の制約**なので、人間が握るのは「何を作るか（優先度）」と「これで欲しいものか（merge）」の2点だけに寄せる。
+
+| 要素 | 中身 |
+|---|---|
+| **Trigger** | フィードバック・タスクの入口は `backlog.md`（キュー）。意見も実装タスクもまずここに1行積む。仕分けは `/loop-review`、消化は `/pr-watch` |
+| **Scope** | `backend/internal` `backend/pkg` `frontend/src` `docs/` は自動編集可。`backend/migrations` と依存追加（go.mod / package.json）は変更前に一言。`.golangci.yml` `eslint.config.ts` は変更禁止（hook でブロック） |
+| **Permission** | 編集・commit ＝ 依頼＋確認OKで実施。**`feat/` ブランチの push ＋ Draft PR 作成は `/pr-watch` ループに委任**。**main 直 push・Draft の Ready 化・merge・マイグレーション実行・依存追加・外部送信は本人トリガー**（コマンドを提示し実行は本人） |
+| **Verification** | backend `mise run lint` ＋ `mise run test-all` ／ frontend `mise run lint` ＋ `mise run test-run`（Stop hook で自動実行）＋ **CI green**（`ci-backend` / `ci-frontend`）＋ AI レビューの CRITICAL 0 件。**UI は `/browser-qa` のスクショ**を証拠に添える |
+| **Budget** | **1ユースケース／1画面 ＝ 1ブランチ ＝ 1 Draft PR**。同時 open PR は1本（レビューは直列）。段階を小さく刻む |
+| **Stop / Escalation** | 同種エラー2回で手を止めて報告。テスト修正は3回で打ち切り。**未確定点は仕分け時に一括確認済みが前提 → `backlog.md` のゲート欄が空なら着手ごとに確認せず走る／埋まっていれば着手せず停止して質問**。優先度が未設定なら着手しない |
+| **Reporting** | 設計判断・"なぜ" は `docs/` へ（業務ルール → `docs/design/domains/<domain>/業務ルール.md`、アーキ・技術選定 → `docs/adr/<backend\|frontend>/NNNN-*.md`、未決の論点 → `docs/design/qa/`）。**要望の状態と順番は `backlog.md`**（キューには決定の理由を書かない） |
+
+### 運用ルール
+
+1. **commit はセット。** 機能変更が確認OKになったら規約に沿って commit まで一気に進める（毎回「commit」と号令させない）。ただし main 直 push・merge は本人トリガー。
+2. **エラーは診断を任せてよい。** エラーは原因仮説なしで貼ってOK。こちらが切り分け→対処案まで出す（実行＝人／診断＝AI に分離する）。
+3. **業務ルールは人間が握る。** 家計簿の運用ルール（暦月集計・固定費コピー・代理入力の扱い等）は立案・推測しない。決定は `docs/design/domains/<domain>/業務ルール.md` に残す。
+4. **聞く場所は仕分け、走る場所は着手。** 未確定点は `/loop-review` でまとめて潰す。着手直前に確認で止めない。
+
+### 承認フロー
+
+承認は「実物を見る」ではなく **証拠を添えて判定する**。承認は2種に分けて扱う。
+
+- **動作の可否** → 機械（lint / test / CI / AI レビュー）で保証。見なくても判定できる。
+- **これで欲しいものか（UX）** → 人間が判断。ここだけ実物（`/browser-qa` のスクショ、ローカル `mise run dev`）が要る。
+
+承認ゲートは1段: **Draft PR → 人間が Ready にして merge**。`/impl-api` `/impl-front` は必ず Draft で PR を作るので、**Ready 化そのものが人間の意思表示**になる。AI は Draft のまま放置された PR を催促しない。
+
+### タスク送りループ
+
+現タスクの PR が close されたら次タスクに自動着手する heartbeat ループ。手順の実体は `pr-watch` skill。
+
+- **Trigger**: 現タスクの PR が close（merged / closed-unmerged）。`Monitor` でその PR を監視し、30秒粒度・terminal 状態でだけ発火する（空振り起動なし）。
+- **動作**: merged → 後片付け（`main` 同期＋merged ブランチ削除）→ backlog を完了ログへ → 次の**優先度順**の未着手に着手（種別に応じて `/impl-api` `/impl-front` へ委譲）→ 証拠を貼って Draft PR → その新 PR を監視開始。closed(未merge) → 見送り／差し戻しとして記録 → 次へ。
+- **Stop**: 未着手なし／全項目の優先度未設定／同種エラー2回 → 停止して報告し、`/loop-review` を促す（永遠に走らせない）。
+
+### ループ系スキル
+
+| スキル | 用途 |
+|---|---|
+| `/loop-review` | 要望の仕分け → ルール反映 → Loop Contract 更新（キューが空／新しい要望が来た時） |
+| `/loop-diagnosis` | 操作ログの診断（月1回。繰り返し・過介入・催促を洗い出す） |
+| `/pr-watch` | merge 駆動のタスク送り（PR close → 次タスク着手） |
+
 ## ドキュメント
 
 実装時は以下のドキュメントを参照すること:

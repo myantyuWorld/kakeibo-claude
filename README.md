@@ -27,6 +27,7 @@
 ├── .github/              # GitHub Actions / PR テンプレート
 ├── backend/              # バックエンド実装
 ├── frontend/             # フロントエンド実装
+├── backlog.md            # タスク・要望の回収キュー（開発ループの入口）
 └── docs/
     ├── design/           # ドメイン設計ドキュメント
     ├── api/              # OpenAPI 仕様書
@@ -93,5 +94,10 @@ cd frontend && mise run dev     # localhost:5173
 | `/review-design` | sudo モデリング成果物のレビュー |
 | `/generate-api-spec` | 設計ドキュメントから OpenAPI 仕様書を生成 |
 | `/generate-er` | ドメインモデルから ER 図（DBML）を生成 |
+| `/loop-review` | 要望の仕分け → ルール反映 → Loop Contract 更新 |
+| `/pr-watch` | merge 駆動のタスク送り（PR close → 次タスク着手） |
+| `/loop-diagnosis` | 操作ログの診断（繰り返し・過介入・催促の洗い出し） |
+
+開発ループの入口は [backlog.md](backlog.md) です。人間が握るのは **優先度の決定** と **PR の merge** の2点だけ。
 
 詳細は [DEVELOPMENT.md](DEVELOPMENT.md) を参照してください。
